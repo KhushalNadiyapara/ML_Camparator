@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>📊 Model Analysis</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            background: #f4f4f4; 
+            padding: 30px; 
+        }
+        h1, h2 {
+            color: #333;
+        }
+        table { 
+            width: 80%; 
+            margin: auto; 
+            border-collapse: collapse; 
+            background: white; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td { 
+            padding: 10px; 
+            border: 1px solid black; 
+        }
+        th { 
+            background: #5e8fae; 
+            color: white; 
+        }
+        /* Highlighted Best Model */
+        .best-model {
+            background: #28a745;
+            color: white;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            width: 60%;
+            margin: auto;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        /* Cards Container */
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        /* Individual Card */
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            width: 300px;
+            text-align: left;
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+        .card h3 {
+            margin-top: 0;
+            background: #5e8fae;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .card pre {
+            font-size: 12px;
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        /* Back Link */
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
+            background: #5e8fae;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .back-link:hover {
+            background: #5e8fae;
+        }
+    </style>
+</head>
+<body>
+
+<h1>📊 Model Analysis Results</h1>
+
+<!-- Display the Model with the Highest Prediction Accuracy -->
+{% set best_model = results | max(attribute='accuracy') %}
+<div class="best-model">
+    🏅 Highest Prediction Accuracy: <strong>{{ best_model['model'] }}</strong> with <strong>{{ best_model['accuracy'] }}%</strong> accuracy!
+</div>
+
+<h2>🏆 Model Performance</h2>
+<table>
+    <tr><th>Model</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1 Score</th></tr>
+    {% for result in results %}
+    <tr>
+        <td>{{ result['model'] }}</td>
+        <td>{{ result['accuracy'] }}%</td>
+        <td>{{ result['precision'] }}%</td>
+        <td>{{ result['recall'] }}%</td>
+        <td>{{ result['f1_score'] }}%</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>⚙️ Model Parameters</h2>
+
+<div class="card-container">
+    {% for param in parameters %}
+    <div class="card">
+        <h3>{{ param['model'] }}</h3>
+        <pre>{{ param['parameters'] }}</pre>
+    </div>
+    {% endfor %}
+</div>
+
+<h2>🌳 Decision Tree Visualization</h2>
+<img src="{{ tree_image }}" alt="Decision Tree" width="80%">
+<br/>
+<a href="/" class="back-link">⬅️ Upload Another File</a>
+
+</body>
+</html>
