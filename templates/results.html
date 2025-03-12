@@ -71,12 +71,16 @@
             text-align: center;
         }
         .card pre {
-            font-size: 12px;
-            background: #f9f9f9;
-            padding: 10px;
-            border-radius: 5px;
-            overflow-x: auto;
-        }
+    font-size: 12px;
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+    overflow-y: auto; /* Enable vertical scrolling */
+    max-height: 200px; /* Limit height to prevent excessive card expansion */
+    white-space: pre-wrap; /* Ensure text wraps properly */
+    word-break: break-word; /* Break long words if necessary */
+}
         /* Back Link */
         .back-link {
             display: inline-block;
@@ -116,6 +120,72 @@
     </tr>
     {% endfor %}
 </table>
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<h2>📊 Model Performance Chart</h2>
+<canvas id="performanceChart"></canvas>
+
+<script>
+    // Data from Flask template
+    var models = {{ results | tojson }};
+    
+    // Extract labels and data
+    var modelNames = models.map(m => m.model);
+    var accuracies = models.map(m => m.accuracy);
+    var precisions = models.map(m => m.precision);
+    var recalls = models.map(m => m.recall);
+    var f1_scores = models.map(m => m.f1_score);
+
+    // Chart.js configuration
+    var ctx = document.getElementById("performanceChart").getContext("2d");
+    var performanceChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: modelNames,
+            datasets: [
+                {
+                    label: "Accuracy (%)",
+                    data: accuracies,
+                    backgroundColor: "rgba(75, 192, 192, 0.6)",
+                    borderColor: "rgba(75, 192, 192, 1)",
+                    borderWidth: 1
+                },
+                {
+                    label: "Precision (%)",
+                    data: precisions,
+                    backgroundColor: "rgba(255, 99, 132, 0.6)",
+                    borderColor: "rgba(255, 99, 132, 1)",
+                    borderWidth: 1
+                },
+                {
+                    label: "Recall (%)",
+                    data: recalls,
+                    backgroundColor: "rgba(255, 206, 86, 0.6)",
+                    borderColor: "rgba(255, 206, 86, 1)",
+                    borderWidth: 1
+                },
+                {
+                    label: "F1 Score (%)",
+                    data: f1_scores,
+                    backgroundColor: "rgba(54, 162, 235, 0.6)",
+                    borderColor: "rgba(54, 162, 235, 1)",
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            }
+        }
+    });
+</script>
 
 <h2>⚙️ Model Parameters</h2>
 
